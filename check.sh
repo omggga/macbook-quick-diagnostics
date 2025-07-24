@@ -4,6 +4,13 @@ set -e
 
 echo "===== MACBOOK QUICK DIAGNOSTICS ====="
 
+## Install xcode clt in not installed
+if ! xcode-select -p >/dev/null 2>&1; then
+  echo "Xcode Command Line Tools not found. Please run:"
+  echo "xcode-select --install"
+  exit 1
+fi
+
 ### 🔧 Install smartmontools if not installed
 if ! command -v smartctl >/dev/null 2>&1; then
   echo "Installing smartmontools via Homebrew..."
