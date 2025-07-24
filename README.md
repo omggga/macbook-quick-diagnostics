@@ -7,22 +7,27 @@ A one-command macOS terminal diagnostic script to gather key information about a
 ---
 
 ## 📦 Repository Name Suggestion
+
 `macbook-quick-diagnostics`
 
 ---
 
 ## 🛠️ Requirements
+
 - macOS (tested on Intel and Apple Silicon)
 - Terminal access with `sudo`
 - [`smartmontools`](https://brew.sh) (will be installed automatically if missing)
+- Internet connection (optional, for model decoding)
 
 ---
 
 ## 🚀 Installation & Usage
+
 ```bash
 chmod +x check.sh
 sudo ./check.sh
 ```
+
 > `sudo` is required for temperature, fan, SMC and SMART data access.
 
 ---
@@ -30,91 +35,146 @@ sudo ./check.sh
 ## 🔍 What It Checks
 
 ### 1. 🔧 Auto-installs `smartmontools`
-Ensures `smartctl` is available to fetch SSD SMART data.
+
+Ensures `smartctl` is available to fetch SSD SMART data. SMART is essential to monitor SSD health and wear levels.
 
 ### 2. 🔎 Model & Serial Number
-- Model Identifier (e.g., `MacBookPro15,1`)
-- Serial Number (with link to Apple warranty check)
-- Attempts to translate model using Apple support lookup
+
+- Prints Model Identifier and Serial Number
+- Offers a direct Apple link for checking warranty and activation lock status
+- If online, attempts to decode the serial into a human-readable model name (e.g., "MacBook Pro 15-inch, 2018")
 
 ### 3. 🧠 CPU Info
-- Intel vs Apple Silicon detection
-- Chip or CPU name shown accordingly
+
+- Detects architecture: Intel or Apple Silicon (M1/M2...)
+- Displays specific chip or CPU name for verification
+
+> Useful for compatibility, resale value, and performance expectations
 
 ### 4. 🔥 CPU Temperature
-- Uses `powermetrics` to read current CPU die temperature
+
+- Uses `powermetrics` to report real-time CPU die temperature
+- Helps spot thermal throttling or poor cooling (if always hot)
 
 ### 5. 💨 Fan Info
-- Reports current fan RPM if available
+
+- Displays current fan RPM
+- If RPMs are stuck high or non-zero at idle, it may indicate thermal or hardware issues
 
 ### 6. 🔐 FileVault Status
-- Whether full-disk encryption is enabled
+
+- Reports if FileVault disk encryption is turned on
+
+> Required for secure resale or in corporate environments
 
 ### 7. 🛡️ T2 Security Chip
-- Detects Apple T2 presence
+
+- Checks if the Mac contains the Apple T2 chip (used for Secure Boot, Touch ID, encrypted storage, etc.)
+- If missing on Macs where it should exist, may indicate logic board replacement or downgrade
 
 ### 8. 🔐 iCloud Lock
-- Checks for Activation Lock presence via NVRAM
+
+- Detects if the device is linked to an Apple ID using NVRAM
+- If locked, the device cannot be reused without the owner's Apple ID password
+
+> Critical before resale — locked devices are effectively useless
 
 ### 9. 💾 Memory Info
-- Lists each memory slot's size/type/speed
-- Calculates and displays **total installed RAM**
+
+- Lists memory modules with size/type/speed
+- Calculates and displays total installed RAM
+
+> Verifies upgradeability and actual configuration
 
 ### 10. 💾 Disk Info
-- Shows disk type, SMART status, and whether it's an SSD
+
+- Reports whether the drive is SSD or HDD
+- Checks SMART status (Verified = healthy)
+- Lists connection type (PCIe/NVMe/SATA)
+
+> Useful for performance and lifespan estimation
 
 ### 11. 📊 SMART Attributes
-- Pulls wear/health indicators from `smartctl`
-- Shows SSD health as percentage and categorizes:
-  - ✅ Excellent
-  - 🟢 Normal wear
-  - 🟡 Moderate wear
-  - 🔴 Needs attention
+
+- Fetches drive age and wear metrics using `smartctl`
+- Categorizes SSD health:
+  - ✅ Excellent (<10%)
+  - 🟢 Normal (10–30%)
+  - 🟡 Moderate (30–60%)
+  - 🔴 Bad (>60%)
+
+> Great for predicting failures or verifying storage condition before sale
 
 ### 12. 🔍 SSD Authenticity Check
-- Verifies if it's a genuine Apple SSD (starts with `APPLE SSD`)
+
+- Checks if the SSD is original Apple hardware
+- Third-party SSDs may not support full power management, TRIM, or encryption
 
 ### 13. 🖥️ Display Info
-- Resolution, chipset model, and mirroring status
+
+- Reports display resolution and graphics chipset
+- Detects if mirroring is active
+
+> Helps verify display configuration or issues with external displays
 
 ### 14. 🎮 GPU Info
-- Detects all active GPUs
-- Lists vendor, VRAM and model
+
+- Lists all active GPUs, their vendor (Intel/AMD/Apple), model, and VRAM amount
+
+> Useful for identifying dual-GPU setups or discrete graphics performance
 
 ### 15. 🔋 Battery Health
-- Charge level and cycle count
-- Interprets cycle health range:
-  - ✅ Like new (<100)
+
+- Shows current charge and cycle count
+- Categorizes battery health:
+  - ✅ Like new (<100 cycles)
   - 🟢 Normal (<500)
   - 🟡 Aging (<800)
-  - 🔴 Needs replacement
+  - 🔴 Replace Soon
+
+> Useful to avoid buying/selling a Mac with worn-out battery
 
 ### 16. 📷 Camera
+
 - Detects FaceTime HD camera presence
+- If missing, may indicate hardware failure or tampering
 
 ### 17. 🔌 Charger Info
-- Wattage and ID of connected AC adapter
-- Basic authenticity check (Apple chargers use specific wattage and ID patterns)
+
+- Shows connected charger’s wattage and vendor ID
+- Basic check for authenticity — Apple uses specific IDs and wattages
+
+> Fake chargers may charge slowly or cause issues
 
 ### 18. 📶 Bluetooth Info
-- Displays MAC address and status
+
+- Shows Bluetooth MAC address and whether it is currently enabled
+
+> Verifies BT module works and wasn't disconnected (common in board repairs)
 
 ### 19. 🔍 USB Devices
-- Recognizes internal USB-based Apple devices by Product ID:
-  - Touch Bar controllers
-  - T2 bridge
-  - Bluetooth, Camera, Audio
-  - Trackpad/Keyboard bridge
+
+- Lists internal USB Apple components (Touch Bar, T2, Bluetooth, etc.) by ID
+- Helps detect if any are missing or malfunctioning
+
+> Especially important for validating Touch Bar models and secure hardware bridges
 
 ### 20. 🕓 System Uptime
-- Time since last reboot
+
+- How long the system has been running since last boot
+
+> Good for spotting reboot loops or uptime-related diagnostics
 
 ### 21. ⏱ Last Boot Time
-- Exact date/time of last macOS boot
+
+- Shows the last exact time the system was booted
+
+> Correlate with update times, crash logs, or unexpected reboots
 
 ---
 
 ## 📌 Example Output (abridged)
+
 ```
 ===== MACBOOK QUICK DIAGNOSTICS =====
 Model Identifier: MacBookPro15,1
@@ -135,17 +195,19 @@ Last Boot Date: 2025-06-03 08:01:47
 ---
 
 ## 📋 Notes
-- You can manually check Apple warranty via the printed serial at:
-  https://checkcoverage.apple.com/
+
+- You can manually check Apple warranty via the printed serial at: [https://checkcoverage.apple.com/](https://checkcoverage.apple.com/)
 
 ---
 
 ## 📄 License
+
 MIT
 
 ---
 
 ## 🙌 Author
+
 Crafted with ❤️ for MacBook diagnostics and safe device resales.
 
 Feel free to fork, improve, or suggest enhancements.
