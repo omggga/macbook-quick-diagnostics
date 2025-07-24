@@ -6,12 +6,6 @@ A one-command macOS terminal diagnostic script to gather key information about a
 
 ---
 
-## 📦 Repository Name Suggestion
-
-`macbook-quick-diagnostics`
-
----
-
 ## 🛠️ Requirements
 
 - macOS (tested on Intel and Apple Silicon)
