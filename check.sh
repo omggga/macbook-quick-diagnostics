@@ -48,17 +48,21 @@ else
   echo "Chip: $CHIP"
 fi
 
-### 🔥 CPU Temp
-echo -e "\n🔥 CPU Temperature:"
-powermetrics --samplers smc -n1 | grep -i "CPU die temperature"
+ARCH=$(uname -m)
 
-### 💨 Fans
-echo -e "\n💨 Fan Info:"
-FAN_INFO=$(powermetrics --samplers smc -n1 | grep -i fan)
-if [[ "$FAN_INFO" == "" ]]; then
-  echo "Fan info not available (may be idle or unsupported)"
+if [[ "$ARCH" == "x86_64" ]]; then
+  echo -e "\n🔥 CPU Temperature (Intel):"
+  powermetrics --samplers smc -n1 | grep -i "CPU die temperature"
+
+  echo -e "\n💨 Fan Info:"
+  FAN_INFO=$(powermetrics --samplers smc -n1 | grep -i fan)
+  [[ -n "$FAN_INFO" ]] && echo "$FAN_INFO" || echo "Fan info not available"
 else
-  echo "$FAN_INFO"
+  echo -e "\n🔥 CPU Temperature:"
+  echo "Apple Silicon does not support SMC temperature reporting via powermetrics"
+
+  echo -e "\n💨 Fan Info:"
+  echo "Apple Silicon does not support fan reporting via powermetrics"
 fi
 
 echo -e "\n🔐 FileVault Status:"
