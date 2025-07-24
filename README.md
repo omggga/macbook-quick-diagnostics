@@ -12,6 +12,7 @@ A one-command macOS terminal diagnostic script to gather key information about a
 - Terminal access with `sudo`
 - [`smartmontools`](https://brew.sh) (will be installed automatically if missing)
 - Internet connection (optional, for model decoding)
+- Xcode Command Line Tools (will prompt to install if missing)
 
 ---
 
@@ -23,6 +24,16 @@ sudo ./check.sh
 ```
 
 > `sudo` is required for temperature, fan, SMC and SMART data access.
+
+If you see this message:
+
+```
+Error: You have not agreed to the Xcode license.
+Please resolve this by running:
+  sudo xcodebuild -license accept
+```
+
+you must install and accept the Xcode Command Line Tools license before proceeding.
 
 ---
 
