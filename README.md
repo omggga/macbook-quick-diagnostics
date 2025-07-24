@@ -15,7 +15,6 @@ A one-command macOS terminal diagnostic script to gather key information about a
 - macOS (tested on Intel and Apple Silicon)
 - Terminal access with `sudo`
 - [`smartmontools`](https://brew.sh) (will be installed automatically if missing)
-- Internet connection (optional, for model decoding)
 
 ---
 
